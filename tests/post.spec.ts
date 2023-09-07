@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 
 test('Form', async ({ page }) => {
   await page.route('/api/post', async route => {
-    await route.fulfill({ json: { message: 'OK' }, status: 200 })
+    await route.fulfill({ json: { message: 'not from API' }, status: 200 })
   })
 
   await page.goto('/');
@@ -14,5 +14,7 @@ test('Form', async ({ page }) => {
 
   const response = await page.waitForResponse('/api/post');
   const json = await response.json();
-  expect(json.message).toEqual('OK')
+  expect(json.message).toEqual('not from API')
+  const success = page.getByTestId('success')
+  await expect(success).toBeAttached()
 });
